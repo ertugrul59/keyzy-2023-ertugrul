@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextField } from '@mui/material';
+import axios from 'axios'
 
 interface TextInputProps {
   onChange: (value: string) => void;
@@ -8,19 +9,9 @@ interface TextInputProps {
 
 const apiCallFunc = async (url: string) => {
     if(url){
-        const res = await fetch(url, {
-            method: "GET",
-            // body: JSON.stringify({
-            //   locationName: locationName,
-            //   address: address,
-            //   city: city,
-            //   country: country,
-            //   postcode: postcode,
-            // }),
-            // headers: { "Content-Type": "application/json" },
-          }).catch((error) => console.log(error));
+        const res = await axios.post('/api/get_page', { url } )
 
-          return res;
+        return res;
     }
 
 
