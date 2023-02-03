@@ -1,11 +1,45 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from '@next/font/google'
+import { Inter, Outfit } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import {  Slider, TextField, FormControl, InputLabel, MenuItem } from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import * as React from 'react';
+import DecimalInput from './components/DecimalInput';
+import UnderscoredTextField from './components/UnderscoredTextField';
+
+// const outfit = Outfit({ subsets: ['latin'] })
 
 const inter = Inter({ subsets: ['latin'] })
 
+const withUnderScoreDouble = `_ _ _ , _ _ _`;
+const withUnderScoreSingle = `_ _ _`;
+const postCodeDefault = "_ _ _ _ _ _";
+
+
+
 export default function Home() {
+
+  const [slider1, setSlider1] = React.useState<number>(15);
+
+  const handleChangeSlider1 = (event: Event, newValue: number | number[]) => {
+    setSlider1(newValue as number);
+  };
+
+  const [valueDecimalInput, setValueDecimalInput] = React.useState<string | number>('4.5');
+
+  const [slider2, setSlider2] = React.useState<number>(20);
+
+  const handleChangeSlider2 = (event: Event, newValue: number | number[]) => {
+    setSlider2(newValue as number);
+  };
+
+  const [duration, setDuration] = React.useState('5');
+
+  const handleChangeSelectDuration = (event: SelectChangeEvent) => {
+    setDuration(event.target.value as string);
+  };
+
   return (
     <>
       <Head>
@@ -15,108 +49,130 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+        <section>
+        <div className="container mx-auto px-6 py-20 bg-navy"> 
+          <h2 className="text-4xl font-bold text-center text-parchment mb-8">
+            Housing Prices
+          </h2>
+          <div className="flex">
+            <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="bg-white rounded shadow py-2 bg-parchment">
+                <p className="font-bold text-base text-navy px-6 mb-8">Inputs</p>
+                <div className="columns-2">
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8 ">URL</p></div>
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">URL</p></div>
+                </div>
+                <br/>
+                <div className="columns-2">
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Discount vs. asking price</p></div>
+                  <div className="flex items-center w-4/5 space-x-2">
+                      <div className="w-1/8"><p className="text-[12px]">0%</p></div>
+                        <div className="w-4/5">
+                          <Slider   
+                            size="small"
+                            valueLabelDisplay="on"
+                            aria-label="Small"
+                            color="secondary"
+                            min={0}
+                            max={30}
+                            value={slider1} 
+                            onChange={handleChangeSlider1}/>
+                        </div>
+                      <div className="w-1/8"><p className="text-[12px]">30%</p></div>
+                    </div>
+                  </div>
+                  <br/>
+                <div className="columns-2">
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Desired yield</p></div>
+                  <div className="w-4/5">       
+                  <DecimalInput value={valueDecimalInput} onChange={setValueDecimalInput} />
+                  </div>
+                </div>
+                <br/>
+                <div className="columns-2">
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Converted rent rate</p></div>
+                  <div className="flex items-center w-4/5 space-x-2">
+                      <div className="w-1/8"><p className="text-[12px]">10%</p></div>
+                        <div className="w-4/5">
+                          <Slider   
+                            size="small"
+                            valueLabelDisplay="on"
+                            aria-label="Small"
+                            color="secondary"
+                            min={10}
+                            max={25}
+                            value={slider2} 
+                            onChange={handleChangeSlider2}/>
+                        </div>
+                      <div className="w-1/8"><p className="text-[12px]">25%</p></div>
+                    </div>
+                </div>
+                <br/>
+                <div className="columns-2">
+                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Duration</p></div>
+                  <div className="w-4/5">
+                    <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label" disabled={true}></InputLabel>
+                    <Select
+                      size='small'
+                      id="demo-simple-select"
+                      value={duration}
+                      defaultValue="5"
+                      onChange={handleChangeSelectDuration}
+                      color="secondary"
+                    >
+                      <MenuItem value={3}>3 years</MenuItem>
+                      <MenuItem value={5}>5 years</MenuItem>
+                      <MenuItem value={7}>7 years</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:w-1/2 mb-4 px-4">
+              <div className="bg-white rounded shadow py-2 bg-parchment">
+                <p className="font-bold text-base text-navy mb-8 px-4">Data Retrieved</p>
+                <div className="columns-2 mb-8 px-4">
+                  <div className="w-full"><p className="text-navy text-base mb-8">Listing Price</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                </div>
+                <div className="columns-2 mb-8 px-4">
+                  <div className="w-full"><p className="text-navy text-base mb-8">Post code</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">{postCodeDefault}</p></div>
+                </div>
+                <p className="font-bold text-base text-navy px-4 mb-8">Outputs</p>
+                <div className="columns-2 mb-8 px-4">
+                  <div className="w-full"><p className="text-navy text-base">Target Price</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                </div>
+                <div className="columns-2 mb-0.4 px-4">
+                  <div className="w-full"><p className="text-navy text-base">Total monthly rental</p></div>
+                  <div className="w-half mb-4">
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                  </div>
+                </div>
+                <div className="columns-2 mb-0.4 px-4">
+                  <div className="w-full"><p className="text-navy text-base">Rent</p></div>
+                  <div className="w-half mb-4">
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                  </div>
+                  </div>
+                <div className="columns-2 mb-8 px-4">
+                  <div className="w-full"><p className="text-navy text-base place-items-end">Converted rent</p></div>
+                  <div className="w-half mb-4">
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                  </div>
+                </div>  
+                <div className="columns-2 mb-8 px-4">
+                  <div className="w-full"><p className="text-navy text-base">Future buy-back price</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-15 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+      </section>
       </main>
     </>
   )
