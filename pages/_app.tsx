@@ -1,20 +1,20 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
-import { Inter, Outfit } from '@next/font/google'
+import { Outfit } from '@next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const outfit = Outfit({ subsets: ['latin'] })
 
 export default function App({ Component, pageProps }: AppProps) {
-  // return (
-  //   <>
-  //     <style jsx global>{`
-  //       html {
-  //         font-family: ${inter.style.fontFamily};
-  //       }
-  //     `}</style>
-  //     <Component {...pageProps} />
-  //   </>
-  // )
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <style jsx global>{`
+        html {
+          font-family: ${outfit.style.fontFamily};
+        }
+      `}</style>
+      <Component {...pageProps} />
+    </>
+  )
+  // return <Component {...pageProps} />;
 }

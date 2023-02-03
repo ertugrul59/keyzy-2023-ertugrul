@@ -1,16 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter, Outfit } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import {  Slider, TextField, FormControl, InputLabel, MenuItem } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import * as React from 'react';
 import DecimalInput from './components/DecimalInput';
-import UnderscoredTextField from './components/UnderscoredTextField';
+import TextInput from './components/TextInput';
 
-// const outfit = Outfit({ subsets: ['latin'] })
-
-const inter = Inter({ subsets: ['latin'] })
 
 const withUnderScoreDouble = `_ _ _ , _ _ _`;
 const withUnderScoreSingle = `_ _ _`;
@@ -27,6 +23,9 @@ export default function Home() {
   };
 
   const [valueDecimalInput, setValueDecimalInput] = React.useState<string | number>('4.5');
+
+  const [valueTextInput, setValueTextInput] = React.useState<string>('');
+
 
   const [slider2, setSlider2] = React.useState<number>(20);
 
@@ -59,8 +58,10 @@ export default function Home() {
               <div className="bg-white rounded shadow py-2 bg-parchment">
                 <p className="font-bold text-base text-navy px-6 mb-8">Inputs</p>
                 <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8 ">URL</p></div>
                   <div className="w-full"><p className="text-navy text-base px-6 mb-8">URL</p></div>
+                  <div className="w-4/5">       
+                  <TextInput value={valueTextInput} onChange={setValueTextInput} />
+                  </div>
                 </div>
                 <br/>
                 <div className="columns-2">
@@ -95,6 +96,7 @@ export default function Home() {
                       <div className="w-1/8"><p className="text-[12px]">10%</p></div>
                         <div className="w-4/5">
                           <Slider   
+                            step={5}
                             size="small"
                             valueLabelDisplay="on"
                             aria-label="Small"

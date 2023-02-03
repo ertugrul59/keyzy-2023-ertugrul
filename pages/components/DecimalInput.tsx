@@ -23,18 +23,13 @@ const DecimalInput: React.FC<DecimalInputProps> = ({ value, onChange }) => {
 
   return (
     <TextField
+      id="TextFieldNumber"
       type="number"
-      // color="#ff0000"
-      inputProps={{ step: 0.1,
-        // style: {
-        //   color: '#F39237'
-        // }
-      }}
+      inputProps={{ step: 0.1 }}
       color="secondary"
       onChange={handleChange}
       value={value}
       size="small"
-      // color="secondary"
     />
   );
 };
