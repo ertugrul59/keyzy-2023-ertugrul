@@ -5,34 +5,25 @@ import axios from 'axios'
 interface TextInputProps {
   onChange: (value: string) => void;
   value:  string;
+
+  onChangeListingPrice: (value: string) => void;
+  onChangePostCode: (value: string) => void;
 }
 
 const apiCallFunc = async (url: string) => {
     if(url){
         const res = await axios.post('/api/get_page', { url } )
-
         return res;
     }
+};
+
+// const checkPricePostcodeCondition = (res: any) => {
+//     return res?.data.price && res?.data.price.length && res?.data.postcode && res?.data.postcode.length;
+// };
 
 
-}
-
-const TextInput: React.FC<TextInputProps> = ({ value, onChange }) => {
+const TextInput: React.FC<TextInputProps> = ({ value, onChange, onChangeListingPrice, onChangePostCode}) => {
   const [displayError, setDisplayError] = React.useState<boolean>(false);
-
-
-    React.useEffect(() => {
-        // await async "fetchBooks()" function
-        if(value) {
-            apiCallFunc(value)
-            .then((res) => {
-              console.log('res:', res);
-            })
-            .catch(() => {
-              console.log('Error occured when fetching books');
-            });
-        }
-      }, [value]);
 
   const inputUrlValidator = (rawInputText: string) => {
     const inputText = rawInputText.replace(/^\s+|\s+$/gm,''); // remove spaces
@@ -45,17 +36,24 @@ const TextInput: React.FC<TextInputProps> = ({ value, onChange }) => {
       console.log('value:', value);
       if(inputUrlValidator(value)){
         setDisplayError(false);
-        // const response = apiCallFunc(value);
-        // apiCallFunc(value).then((res) => {
-        //       console.log('res:');
-        //     })
-        //     .catch(() => {
-        //       console.log('Error occured when fetching books');
-        //     });
-        // // console.log('response:', response);
        } else {
         setDisplayError(true);
        }
+
+       if(value) {
+        apiCallFunc(value)
+        .then((res) => {
+          console.log('price:', res?.data.price);
+          console.log('postcode:', res?.data.postcode);
+          onChangeListingPrice(res?.data.price ? res.data.price : '');
+          onChangePostCode(res?.data.postcode ? res.data.postcode : '');
+        })
+        .catch(() => {
+          console.log('Error occured when fetching webpage');
+          onChangeListingPrice('');
+          onChangePostCode('');
+        });
+    }
 
       console.log('inputUrlValidator:', inputUrlValidator(value));
 

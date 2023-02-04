@@ -2,15 +2,15 @@ import * as React from 'react';
 import { TextField } from '@mui/material';
 
 interface DecimalInputProps {
-  onChange: (value: number | string) => void;
-  value:  number | string;
+  onChange: (value: number) => void;
+  value:  number;
 }
 
 const DecimalInput: React.FC<DecimalInputProps> = ({ value, onChange }) => {
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      if ((parseFloat(value) >= 4.5 && parseFloat(value) <= 9)) {
+      const value = parseFloat(event.target.value);
+      if ((value >= 4.5 && value <= 9)) {
         onChange(value);
       } 
 

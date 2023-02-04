@@ -8,6 +8,7 @@ import DecimalInput from './components/DecimalInput';
 import TextInput from './components/TextInput';
 
 
+
 const withUnderScoreDouble = `_ _ _ , _ _ _`;
 const withUnderScoreSingle = `_ _ _`;
 const postCodeDefault = "_ _ _ _ _ _";
@@ -16,28 +17,60 @@ const postCodeDefault = "_ _ _ _ _ _";
 
 export default function Home() {
 
-  const [slider1, setSlider1] = React.useState<number>(15);
+  const [discountvsAskingPrice, setDiscountvsAskingPrice] = React.useState<number>(15);
 
-  const handleChangeSlider1 = (event: Event, newValue: number | number[]) => {
-    setSlider1(newValue as number);
+  const handleChangeDiscountvsAskingPrice = (event: Event, newValue: number | number[]) => {
+    setDiscountvsAskingPrice(newValue as number);
   };
 
-  const [valueDecimalInput, setValueDecimalInput] = React.useState<string | number>('4.5');
-
+  const [desiredYield, setDesiredYield] = React.useState<number>(4.5);
   const [valueTextInput, setValueTextInput] = React.useState<string>('');
 
+  const [convertedRentRate, setConvertedRentRate] = React.useState<number>(20);
 
-  const [slider2, setSlider2] = React.useState<number>(20);
-
-  const handleChangeSlider2 = (event: Event, newValue: number | number[]) => {
-    setSlider2(newValue as number);
+  const handleChangeConvertedRentRate = (event: Event, newValue: number | number[]) => {
+    setConvertedRentRate(newValue as number);
   };
 
-  const [duration, setDuration] = React.useState('5');
+  const [duration, setDuration] = React.useState<string>("5");
 
   const handleChangeSelectDuration = (event: SelectChangeEvent) => {
-    setDuration(event.target.value as string);
+    setDuration(event.target.value);
   };
+
+
+  const [listingPrice, setListingPrice] = React.useState<string>('');
+  const [postCode, setPostCode] = React.useState<string>('');
+
+  const [targetPrice, setTargetPrice] = React.useState<string>('');
+  const [totalMonthlyRental, setTotalMonthlyRental] = React.useState<string>('');
+  const [rent, setRent] = React.useState<string>('');
+  const [convertedRent, setConvertedRent] = React.useState<string>('');
+  const [futureBuybackPrice, setFutureBuybackPrice] = React.useState<string>('');
+
+  const convertValue = (value: string | number): any => {
+    var convertV;
+  
+    if(typeof value === 'string') {
+        convertV = parseFloat(value.replace(",", ""));
+        return convertV ? convertV : undefined;
+    } else if(typeof value === 'number' && !isNaN(value)){
+        convertV = value.toLocaleString();
+        return convertV ? convertV : undefined;
+    }
+
+    return;
+  }
+
+      React.useEffect(() => {
+            setTargetPrice(convertValue(convertValue(listingPrice) * (1 - discountvsAskingPrice / 100)));
+            setRent(convertValue(parseFloat((convertValue(targetPrice) / 12 * desiredYield / 100).toFixed(1))));
+            setConvertedRent(convertValue(parseFloat((convertValue(targetPrice) / 12 * desiredYield / 100 * convertedRentRate/100).toFixed(1))));
+            setTotalMonthlyRental(convertValue(parseFloat((convertValue(rent) + convertValue(convertedRent)).toFixed(1))));
+            setFutureBuybackPrice(convertValue(convertValue(targetPrice) - (convertValue(convertedRent) * convertValue(duration) * 12)));
+
+      }, [valueTextInput, listingPrice, postCode, discountvsAskingPrice, rent, desiredYield, targetPrice, convertedRentRate, duration]);
+
 
   return (
     <>
@@ -51,7 +84,7 @@ export default function Home() {
         <section>
         <div className="container mx-auto px-6 py-20 bg-navy"> 
           <h2 className="text-4xl font-bold text-center text-parchment mb-8">
-            Housing Prices
+            Information
           </h2>
           <div className="flex">
             <div className="w-full md:w-1/2 px-2 mb-4">
@@ -60,7 +93,7 @@ export default function Home() {
                 <div className="columns-2">
                   <div className="w-full"><p className="text-navy text-base px-6 mb-8">URL</p></div>
                   <div className="w-4/5">       
-                  <TextInput value={valueTextInput} onChange={setValueTextInput} />
+                  <TextInput value={valueTextInput} onChange={setValueTextInput} onChangeListingPrice={setListingPrice} onChangePostCode={setPostCode}/>
                   </div>
                 </div>
                 <br/>
@@ -76,8 +109,8 @@ export default function Home() {
                             color="secondary"
                             min={0}
                             max={30}
-                            value={slider1} 
-                            onChange={handleChangeSlider1}/>
+                            value={discountvsAskingPrice} 
+                            onChange={handleChangeDiscountvsAskingPrice}/>
                         </div>
                       <div className="w-1/8"><p className="text-[12px]">30%</p></div>
                     </div>
@@ -86,7 +119,7 @@ export default function Home() {
                 <div className="columns-2">
                   <div className="w-full"><p className="text-navy text-base px-6 mb-8">Desired yield</p></div>
                   <div className="w-4/5">       
-                  <DecimalInput value={valueDecimalInput} onChange={setValueDecimalInput} />
+                  <DecimalInput value={desiredYield} onChange={setDesiredYield} />
                   </div>
                 </div>
                 <br/>
@@ -103,8 +136,8 @@ export default function Home() {
                             color="secondary"
                             min={10}
                             max={25}
-                            value={slider2} 
-                            onChange={handleChangeSlider2}/>
+                            value={convertedRentRate} 
+                            onChange={handleChangeConvertedRentRate}/>
                         </div>
                       <div className="w-1/8"><p className="text-[12px]">25%</p></div>
                     </div>
@@ -119,7 +152,7 @@ export default function Home() {
                       size='small'
                       id="demo-simple-select"
                       value={duration}
-                      defaultValue="5"
+                      defaultValue = "5"
                       onChange={handleChangeSelectDuration}
                       color="secondary"
                     >
@@ -137,38 +170,38 @@ export default function Home() {
                 <p className="font-bold text-base text-navy mb-8 px-4">Data Retrieved</p>
                 <div className="columns-2 mb-8 px-4">
                   <div className="w-full"><p className="text-navy text-base mb-8">Listing Price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {listingPrice.length ? listingPrice : withUnderScoreDouble}</p></div>
                 </div>
                 <div className="columns-2 mb-8 px-4">
                   <div className="w-full"><p className="text-navy text-base mb-8">Post code</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">{postCodeDefault}</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">{postCode.length ? postCode : postCodeDefault}</p></div>
                 </div>
                 <p className="font-bold text-base text-navy px-4 mb-8">Outputs</p>
                 <div className="columns-2 mb-8 px-4">
                   <div className="w-full"><p className="text-navy text-base">Target Price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {targetPrice ? targetPrice : withUnderScoreDouble}</p></div>
                 </div>
                 <div className="columns-2 mb-0.4 px-4">
-                  <div className="w-full"><p className="text-navy text-base">Total monthly rental</p></div>
+                  <div className="w-full"><p className="text-navy text-base">Total monthly rental</p></div> 
                   <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{totalMonthlyRental ? totalMonthlyRental : withUnderScoreSingle}</p>
                   </div>
                 </div>
                 <div className="columns-2 mb-0.4 px-4">
                   <div className="w-full"><p className="text-navy text-base">Rent</p></div>
                   <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{rent ? rent : withUnderScoreSingle}</p>
                   </div>
                   </div>
                 <div className="columns-2 mb-8 px-4">
                   <div className="w-full"><p className="text-navy text-base place-items-end">Converted rent</p></div>
                   <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{withUnderScoreSingle}</p>
+                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{convertedRent ? convertedRent : withUnderScoreSingle}</p>
                   </div>
                 </div>  
                 <div className="columns-2 mb-8 px-4">
                   <div className="w-full"><p className="text-navy text-base">Future buy-back price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-15 mb-8 mr-10">£ {withUnderScoreDouble}</p></div>
+                  <div className="w-full"><p className="text-navy text-right ml-15 mb-8 mr-10">£ {futureBuybackPrice ? futureBuybackPrice : withUnderScoreDouble}</p></div>
                 </div>
               </div>
             </div>
