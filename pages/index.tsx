@@ -53,7 +53,7 @@ export default function Home() {
     var convertV;
 
     if (typeof value === "string") {
-      convertV = parseFloat(value.replace(",", ""));
+      convertV = parseFloat(value.replace(/\,/g, ""));
       return convertV ? convertV : undefined;
     } else if (typeof value === "number" && !isNaN(value)) {
       convertV = value.toLocaleString();
