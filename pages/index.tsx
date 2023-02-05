@@ -1,34 +1,34 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '@/styles/Home.module.css'
-import {  Slider, TextField, FormControl, InputLabel, MenuItem } from '@mui/material';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import * as React from 'react';
-import DecimalInput from './components/DecimalInput';
-import TextInput from './components/TextInput';
-
-
+import Head from "next/head";
+import { Slider, FormControl, MenuItem } from "@mui/material";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import * as React from "react";
+import DecimalInput from "../components/DecimalInput";
+import TextInput from "../components/TextInput";
 
 const withUnderScoreDouble = `_ _ _ , _ _ _`;
 const withUnderScoreSingle = `_ _ _`;
 const postCodeDefault = "_ _ _ _ _ _";
 
-
-
 export default function Home() {
+  const [discountvsAskingPrice, setDiscountvsAskingPrice] =
+    React.useState<number>(15);
 
-  const [discountvsAskingPrice, setDiscountvsAskingPrice] = React.useState<number>(15);
-
-  const handleChangeDiscountvsAskingPrice = (event: Event, newValue: number | number[]) => {
+  const handleChangeDiscountvsAskingPrice = (
+    event: Event,
+    newValue: number | number[]
+  ) => {
     setDiscountvsAskingPrice(newValue as number);
   };
 
   const [desiredYield, setDesiredYield] = React.useState<number>(4.5);
-  const [valueTextInput, setValueTextInput] = React.useState<string>('');
+  const [valueTextInput, setValueTextInput] = React.useState<string>("");
 
   const [convertedRentRate, setConvertedRentRate] = React.useState<number>(20);
 
-  const handleChangeConvertedRentRate = (event: Event, newValue: number | number[]) => {
+  const handleChangeConvertedRentRate = (
+    event: Event,
+    newValue: number | number[]
+  ) => {
     setConvertedRentRate(newValue as number);
   };
 
@@ -38,39 +38,79 @@ export default function Home() {
     setDuration(event.target.value);
   };
 
+  const [listingPrice, setListingPrice] = React.useState<string>("");
+  const [postCode, setPostCode] = React.useState<string>("");
 
-  const [listingPrice, setListingPrice] = React.useState<string>('');
-  const [postCode, setPostCode] = React.useState<string>('');
-
-  const [targetPrice, setTargetPrice] = React.useState<string>('');
-  const [totalMonthlyRental, setTotalMonthlyRental] = React.useState<string>('');
-  const [rent, setRent] = React.useState<string>('');
-  const [convertedRent, setConvertedRent] = React.useState<string>('');
-  const [futureBuybackPrice, setFutureBuybackPrice] = React.useState<string>('');
+  const [targetPrice, setTargetPrice] = React.useState<string>("");
+  const [totalMonthlyRental, setTotalMonthlyRental] =
+    React.useState<string>("");
+  const [rent, setRent] = React.useState<string>("");
+  const [convertedRent, setConvertedRent] = React.useState<string>("");
+  const [futureBuybackPrice, setFutureBuybackPrice] =
+    React.useState<string>("");
 
   const convertValue = (value: string | number): any => {
     var convertV;
-  
-    if(typeof value === 'string') {
-        convertV = parseFloat(value.replace(",", ""));
-        return convertV ? convertV : undefined;
-    } else if(typeof value === 'number' && !isNaN(value)){
-        convertV = value.toLocaleString();
-        return convertV ? convertV : undefined;
+
+    if (typeof value === "string") {
+      convertV = parseFloat(value.replace(",", ""));
+      return convertV ? convertV : undefined;
+    } else if (typeof value === "number" && !isNaN(value)) {
+      convertV = value.toLocaleString();
+      return convertV ? convertV : undefined;
     }
 
     return;
-  }
+  };
 
-      React.useEffect(() => {
-            setTargetPrice(convertValue(convertValue(listingPrice) * (1 - discountvsAskingPrice / 100)));
-            setRent(convertValue(parseFloat((convertValue(targetPrice) / 12 * desiredYield / 100).toFixed(1))));
-            setConvertedRent(convertValue(parseFloat((convertValue(targetPrice) / 12 * desiredYield / 100 * convertedRentRate/100).toFixed(1))));
-            setTotalMonthlyRental(convertValue(parseFloat((convertValue(rent) + convertValue(convertedRent)).toFixed(1))));
-            setFutureBuybackPrice(convertValue(convertValue(targetPrice) - (convertValue(convertedRent) * convertValue(duration) * 12)));
-
-      }, [valueTextInput, listingPrice, postCode, discountvsAskingPrice, rent, desiredYield, targetPrice, convertedRentRate, duration]);
-
+  React.useEffect(() => {
+    setTargetPrice(
+      convertValue(
+        convertValue(listingPrice) * (1 - discountvsAskingPrice / 100)
+      )
+    );
+    setRent(
+      convertValue(
+        parseFloat(
+          (((convertValue(targetPrice) / 12) * desiredYield) / 100).toFixed(1)
+        )
+      )
+    );
+    setConvertedRent(
+      convertValue(
+        parseFloat(
+          (
+            ((((convertValue(targetPrice) / 12) * desiredYield) / 100) *
+              convertedRentRate) /
+            100
+          ).toFixed(1)
+        )
+      )
+    );
+    setTotalMonthlyRental(
+      convertValue(
+        parseFloat(
+          (convertValue(rent) + convertValue(convertedRent)).toFixed(1)
+        )
+      )
+    );
+    setFutureBuybackPrice(
+      convertValue(
+        convertValue(targetPrice) -
+          convertValue(convertedRent) * convertValue(duration) * 12
+      )
+    );
+  }, [
+    valueTextInput,
+    listingPrice,
+    postCode,
+    discountvsAskingPrice,
+    rent,
+    desiredYield,
+    targetPrice,
+    convertedRentRate,
+    duration,
+  ]);
 
   return (
     <>
@@ -80,135 +120,261 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <section>
-        <div className="container mx-auto px-6 py-20 bg-navy"> 
-          <h2 className="text-4xl font-bold text-center text-parchment mb-8">
-            Information
-          </h2>
-          <div className="flex">
-            <div className="w-full md:w-1/2 px-2 mb-4">
-              <div className="bg-white rounded shadow py-2 bg-parchment">
-                <p className="font-bold text-base text-navy px-6 mb-8">Inputs</p>
-                <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">URL</p></div>
-                  <div className="w-4/5">       
-                  <TextInput value={valueTextInput} onChange={setValueTextInput} onChangeListingPrice={setListingPrice} onChangePostCode={setPostCode}/>
-                  </div>
-                </div>
-                <br/>
-                <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Discount vs. asking price</p></div>
-                  <div className="flex items-center w-4/5 space-x-2">
-                      <div className="w-1/8"><p className="text-[12px]">0%</p></div>
-                        <div className="w-4/5">
-                          <Slider   
-                            size="small"
-                            valueLabelDisplay="on"
-                            aria-label="Small"
-                            color="secondary"
-                            min={0}
-                            max={30}
-                            value={discountvsAskingPrice} 
-                            onChange={handleChangeDiscountvsAskingPrice}/>
-                        </div>
-                      <div className="w-1/8"><p className="text-[12px]">30%</p></div>
+      <main>
+        <section className="hidden tablet:block desktop:hidden">
+          <div className="flex items-center h-screen w-screen">
+            <h2 className="text-4xl font-bold text-center text-magenta">
+              Not tablet friendly - please use mobile or desktop device.
+            </h2>
+          </div>
+        </section>
+        <section className="block tablet:hidden desktop:block">
+          <div className="container mx-auto px-6 py-20 bg-navy">
+            <h2 className="text-4xl font-bold text-center text-parchment mb-8">
+              Information
+            </h2>
+            <div className="desktop:flex">
+              <div className="w-full desktop:w-1/2 px-4 mb-4">
+                <div className="bg-white rounded shadow py-2 bg-parchment">
+                  <p className="font-bold text-sm desktop:text-base text-navy px-6 mb-8">
+                    Inputs
+                  </p>
+                  <div className="columns-2">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base px-6 mb-8">
+                        URL
+                      </p>
+                    </div>
+                    <div className="w-4/5">
+                      <FormControl fullWidth>
+                        <TextInput
+                          value={valueTextInput}
+                          onChange={setValueTextInput}
+                          onChangeListingPrice={setListingPrice}
+                          onChangePostCode={setPostCode}
+                        />
+                      </FormControl>
                     </div>
                   </div>
-                  <br/>
-                <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Desired yield</p></div>
-                  <div className="w-4/5">       
-                  <DecimalInput value={desiredYield} onChange={setDesiredYield} />
-                  </div>
-                </div>
-                <br/>
-                <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Converted rent rate</p></div>
-                  <div className="flex items-center w-4/5 space-x-2">
-                      <div className="w-1/8"><p className="text-[12px]">10%</p></div>
-                        <div className="w-4/5">
-                          <Slider   
-                            step={5}
-                            size="small"
-                            valueLabelDisplay="on"
-                            aria-label="Small"
-                            color="secondary"
-                            min={10}
-                            max={25}
-                            value={convertedRentRate} 
-                            onChange={handleChangeConvertedRentRate}/>
-                        </div>
-                      <div className="w-1/8"><p className="text-[12px]">25%</p></div>
+                  <br />
+                  <div className="columns-2">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base px-6 mb-8">
+                        Discount vs. asking price
+                      </p>
                     </div>
-                </div>
-                <br/>
-                <div className="columns-2">
-                  <div className="w-full"><p className="text-navy text-base px-6 mb-8">Duration</p></div>
-                  <div className="w-4/5">
-                    <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label" disabled={true}></InputLabel>
-                    <Select
-                      size='small'
-                      id="demo-simple-select"
-                      value={duration}
-                      defaultValue = "5"
-                      onChange={handleChangeSelectDuration}
-                      color="secondary"
-                    >
-                      <MenuItem value={3}>3 years</MenuItem>
-                      <MenuItem value={5}>5 years</MenuItem>
-                      <MenuItem value={7}>7 years</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
+                    <div className="flex items-center w-4/5 space-x-2">
+                      <div className="w-1/8">
+                        <p className="text-[12px]">0%</p>
+                      </div>
+                      <Slider
+                        size="small"
+                        valueLabelDisplay="on"
+                        aria-label="Small"
+                        color="secondary"
+                        min={0}
+                        max={30}
+                        value={discountvsAskingPrice}
+                        onChange={handleChangeDiscountvsAskingPrice}
+                      />
+                      <div className="w-1/8">
+                        <p className="text-[12px]">30%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="columns-2">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base px-6 mb-8">
+                        Desired yield
+                      </p>
+                    </div>
+                    <div className="w-4/5">
+                      <FormControl fullWidth>
+                        <DecimalInput
+                          value={desiredYield}
+                          onChange={setDesiredYield}
+                        />
+                      </FormControl>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="columns-2">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base px-6 mb-8">
+                        Converted rent rate
+                      </p>
+                    </div>
+                    <div className="flex items-center w-4/5 space-x-2">
+                      <div className="w-1/8">
+                        <p className="text-[12px]">10%</p>
+                      </div>
+                      <Slider
+                        step={5}
+                        size="small"
+                        valueLabelDisplay="on"
+                        aria-label="Small"
+                        color="secondary"
+                        min={10}
+                        max={25}
+                        value={convertedRentRate}
+                        onChange={handleChangeConvertedRentRate}
+                      />
+                      <div className="w-1/8">
+                        <p className="text-[12px]">25%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="columns-2">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base px-6 mb-8">
+                        Duration
+                      </p>
+                    </div>
+                    <div className="w-4/5">
+                      <FormControl fullWidth>
+                        <Select
+                          className="text-sm desktop:text-base"
+                          size="small"
+                          id="demo-simple-select"
+                          value={duration}
+                          defaultValue="5"
+                          onChange={handleChangeSelectDuration}
+                          color="secondary"
+                        >
+                          <MenuItem
+                            className="text-sm desktop:text-base"
+                            value={3}
+                          >
+                            3 years
+                          </MenuItem>
+                          <MenuItem
+                            className="text-sm desktop:text-base"
+                            value={5}
+                          >
+                            5 years
+                          </MenuItem>
+                          <MenuItem
+                            className="text-sm desktop:text-base"
+                            value={7}
+                          >
+                            7 years
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full md:w-1/2 mb-4 px-4">
-              <div className="bg-white rounded shadow py-2 bg-parchment">
-                <p className="font-bold text-base text-navy mb-8 px-4">Data Retrieved</p>
-                <div className="columns-2 mb-8 px-4">
-                  <div className="w-full"><p className="text-navy text-base mb-8">Listing Price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {listingPrice.length ? listingPrice : withUnderScoreDouble}</p></div>
-                </div>
-                <div className="columns-2 mb-8 px-4">
-                  <div className="w-full"><p className="text-navy text-base mb-8">Post code</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">{postCode.length ? postCode : postCodeDefault}</p></div>
-                </div>
-                <p className="font-bold text-base text-navy px-4 mb-8">Outputs</p>
-                <div className="columns-2 mb-8 px-4">
-                  <div className="w-full"><p className="text-navy text-base">Target Price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-8 mb-8 mr-10">£ {targetPrice ? targetPrice : withUnderScoreDouble}</p></div>
-                </div>
-                <div className="columns-2 mb-0.4 px-4">
-                  <div className="w-full"><p className="text-navy text-base">Total monthly rental</p></div> 
-                  <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{totalMonthlyRental ? totalMonthlyRental : withUnderScoreSingle}</p>
+              <div className="w-full desktop:w-1/2 mb-4 px-4">
+                <div className="bg-white rounded shadow py-2 bg-parchment">
+                  <p className="font-bold text-sm desktop:text-base text-navy mb-8 px-4">
+                    Data Retrieved
+                  </p>
+                  <div className="columns-2 mb-8 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base mb-8">
+                        Listing Price
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £
+                        {listingPrice.length
+                          ? listingPrice
+                          : withUnderScoreDouble}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="columns-2 mb-0.4 px-4">
-                  <div className="w-full"><p className="text-navy text-base">Rent</p></div>
-                  <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{rent ? rent : withUnderScoreSingle}</p>
+                  <div className="columns-2 mb-8 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base mb-8">
+                        Post code
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        {postCode.length ? postCode : postCodeDefault}
+                      </p>
+                    </div>
                   </div>
+                  <p className="font-bold text-sm desktop:text-base text-navy px-4 mb-8">
+                    Outputs
+                  </p>
+                  <div className="columns-2 mb-8 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base">
+                        Target Price
+                      </p>
+                    </div>
+
+                    <div className="w-full">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £{targetPrice ? targetPrice : withUnderScoreDouble}
+                      </p>
+                    </div>
                   </div>
-                <div className="columns-2 mb-8 px-4">
-                  <div className="w-full"><p className="text-navy text-base place-items-end">Converted rent</p></div>
-                  <div className="w-half mb-4">
-                    <p className="text-navy mr-10 text-right">£&emsp;&emsp;&emsp;&ensp;{convertedRent ? convertedRent : withUnderScoreSingle}</p>
+                  <div className="columns-2 mb-0.4 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base">
+                        Total monthly rental
+                      </p>
+                    </div>
+                    <div className="w-half mb-4">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £
+                        {totalMonthlyRental
+                          ? totalMonthlyRental
+                          : withUnderScoreSingle}
+                      </p>
+                    </div>
                   </div>
-                </div>  
-                <div className="columns-2 mb-8 px-4">
-                  <div className="w-full"><p className="text-navy text-base">Future buy-back price</p></div>
-                  <div className="w-full"><p className="text-navy text-right ml-15 mb-8 mr-10">£ {futureBuybackPrice ? futureBuybackPrice : withUnderScoreDouble}</p></div>
+                  <div className="columns-2 mb-0.4 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base">
+                        Rent
+                      </p>
+                    </div>
+                    <div className="w-half mb-4">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £{rent ? rent : withUnderScoreSingle}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="columns-2 mb-8 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base place-items-end">
+                        Converted rent
+                      </p>
+                    </div>
+                    <div className="w-half mb-4">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £{convertedRent ? convertedRent : withUnderScoreSingle}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="columns-2 mb-8 px-4">
+                    <div className="w-full">
+                      <p className="text-navy text-sm desktop:text-base">
+                        Future buy-back price
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-navy mr-5 desktop:mr-10 text-right text-sm desktop:text-base">
+                        £
+                        {futureBuybackPrice
+                          ? futureBuybackPrice
+                          : withUnderScoreDouble}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </main>
     </>
-  )
+  );
 }

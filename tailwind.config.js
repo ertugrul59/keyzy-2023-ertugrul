@@ -9,17 +9,22 @@ module.exports = {
   ],
   theme: {
     colors: {
-      'navy': '#273043',
-      'honey': '#F39237',
-      'magenta': '#BF1363',
-      'azure': '#0E79B2',
-      'parchment': '#FBFFF1',
+      navy: "#273043",
+      honey: "#F39237",
+      magenta: "#BF1363",
+      azure: "#0E79B2",
+      parchment: "#FBFFF1",
     },
     extend: {
       textUnderlineOffset: {
-        setOffset: '-0.2px',
-      }
+        setOffset: "-0.2px",
+      },
+    },
+    screens: {
+      // mobile: { max: "399px" },
+      tablet: { min: "768px", max: "1023px" },
+      desktop: { min: "1024px" },
     },
   },
   plugins: [],
-}
+};
