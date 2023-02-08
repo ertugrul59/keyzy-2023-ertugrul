@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 interface DecimalInputProps {
   onChange: (value: number) => void;

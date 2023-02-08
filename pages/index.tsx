@@ -1,5 +1,7 @@
 import Head from "next/head";
-import { Slider, FormControl, MenuItem } from "@mui/material";
+import Slider from "@mui/material/Slider";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import * as React from "react";
 import DecimalInput from "../components/DecimalInput";
@@ -53,11 +55,11 @@ export default function Home() {
     var convertV;
 
     if (typeof value === "string") {
-      convertV = parseFloat(value.replace(/\,/g, ""));
-      return convertV ? convertV : undefined;
+      convertV = parseFloat(value.replace(/\,/g, "")); //replace all commas
+      return convertV;
     } else if (typeof value === "number" && !isNaN(value)) {
-      convertV = value.toLocaleString();
-      return convertV ? convertV : undefined;
+      convertV = value.toLocaleString(); // add commas and convert it to string
+      return convertV;
     }
 
     return;
